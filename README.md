@@ -56,17 +56,17 @@ mcp_server/
 
 ```bash
 # Development mode
-poetry run uvicorn src.mcp_server.main:app --reload
+make dev
 
 # Production mode
-poetry run uvicorn src.mcp_server.main:app --host 0.0.0.0 --port 8000
+make run
 ```
 
 ### Testing
 
 ```bash
 # Run all tests
-poetry run pytest
+make test
 
 # Run tests with coverage
 poetry run pytest --cov=src/mcp_server
