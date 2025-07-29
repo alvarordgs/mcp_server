@@ -1,0 +1,19 @@
+[project]
+name = "mcp-server"
+version = "0.1.0"
+description = "Proof of Concept applying a MCP Server to consume data from coingecko API using GenAI"
+authors = [
+    {name = "MatheusHMR",email = "matheus.henrimr@gmail.com"},
+    {name = "alvarordgs",email = "alvarordgs98@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.12.4"
+dependencies = [
+    "fastapi (>=0.116.1,<0.117.0)",
+    "pydantic (>=2.11.7,<3.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
