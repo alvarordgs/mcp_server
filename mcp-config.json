@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "crypto-analysis": {
+      "command": "python",
+      "args": ["-m", "mcp_server.main"],
+      "env": {
+        "GOOGLE_STUDIO_AI_API_KEY": "${GOOGLE_STUDIO_AI_API_KEY}"
+      }
+    }
+  }
+} 
