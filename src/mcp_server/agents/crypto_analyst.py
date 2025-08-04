@@ -1,6 +1,9 @@
 import os
 from google import genai
 from typing import Dict, Any
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class CryptoAnalyst():
 
@@ -19,29 +22,23 @@ class CryptoAnalyst():
 
     def __init__(self):
         api_key = os.getenv("GOOGLE_STUDIO_AI_API_KEY")
-        genai.configure(api_key=api_key)
-        self.client = genai.Client()
+        self.client = genai.Client(api_key=api_key)
         
 
-    def analyze_crypto_price(self, data: Dict[str, Any]) -> str:
-
-        print(data)
-
-        return "test"
-
+    async def analyze_crypto_price(self, data: Dict[str, Any]) -> str:
         crypto_info = f"""
         CRYPTOCURRENCY DATA:
         - Name: {data.get("name", "Unknown")}
-        - Current Price: {data.get("price", "N/A")}
-        - 24h Change: {data.get("change_24h", "N/A")}
-        - Market Cap: {data.get("market_cap", "N/A")}
-        - Volume (24h): {data.get("volume_24h", "N/A")}
+        - Current Price: {data.get("market_data", {}).get("current_price", {}).get("usd", "N/A")}
+        - 24h Change: {data.get("market_data", {}).get("price_change_percentage_24h", "N/A")}
+        - Market Cap: {data.get("market_data", {}).get("market_cap_change_24h", "N/A")}
+        - Volume (24h): {data.get("market_data", {}).get("total_volume", {}).get("usd", "N/A")}
         - Circulating Supply: {data.get("circulating_supply", "N/A")}
-        - All-time High: {data.get("ath", "N/A")}
-        - All-time Low: {data.get("atl", "N/A")}
+        - All-time High: {data.get("market_data", {}).get("ath", {}).get("usd", "N/A")}
+        - All-time Low: {data.get("market_data", {}).get("atl", {}).get("usd", "N/A")}
         """
         
-        prompt = self.base_prompt + crypto_info + "\n\nPlease provide a comprehensive analysis based on this data."
+        prompt = self.base_prompt + crypto_info + "\n\nPlease provide a comprehensive analysis of the crypto currency based on this data."
         response = self.client.models.generate_content(
             model="gemini-1.5-flash",
             contents=[prompt]
