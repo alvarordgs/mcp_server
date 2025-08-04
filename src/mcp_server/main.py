@@ -1,27 +1,35 @@
-from typing import Union
+from mcp.server.fastmcp import FastMCP
+from mcp_server.agents.crypto_analyst import CryptoAnalyst
+import requests
 
-from fastapi import FastAPI
-from pydantic import BaseModel
+class CryptoMCPServer:
 
-app = FastAPI()
+    mcp: FastMCP
+    api_base_url: str
 
+    def __init__(self):
+        self.api_base_url = "https://api.coingecko.com/api/v3"
+        self.mcp = FastMCP(
+            tools=[self.get_crypto_informations]
+        )                    
 
-class Item(BaseModel):
-    name: str
-    price: float
-    is_offer: Union[bool, None] = None
+    @mcp.tool
+    def get_crypto_informations(self, crypto_id: str):
+        url = f"{self.api_base_url}/coins/{crypto_id}"
 
+        params = {
+            "ids": 'bitcoin',
+            "vs_currencies": "brl",
+            "include_24hr_change": "true"
+        }
+        response = requests.get(url, params=params)
+        data = response.json()
+        print(data)
+        return data
 
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
+    def run(self):
+        self.mcp.run()
 
-
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
-
-
-@app.put("/items/{item_id}")
-def update_item(item_id: int, item: Item):
-    return {"item_name": item.name, "item_id": item_id}
+if __name__ == "__main__":
+    server = CryptoMCPServer()
+    server.run()
